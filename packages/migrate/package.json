@@ -1,6 +1,6 @@
 {
   "name": "agents-md-migrate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Convert legacy AI-assistant rule files (.cursorrules, CLAUDE.md, .windsurfrules, Copilot, Cline, Aider) into a single tested AGENTS.md.",
   "type": "module",
   "license": "MIT",

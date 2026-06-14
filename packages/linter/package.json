@@ -1,6 +1,6 @@
 {
   "name": "agents-md-lint",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The tested, tool-agnostic AGENTS.md linter — validates, scores, and autofixes AGENTS.md files.",
   "license": "MIT",
   "type": "module",
