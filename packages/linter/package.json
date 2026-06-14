@@ -1,0 +1,47 @@
+{
+  "name": "agents-md-lint",
+  "version": "0.1.0",
+  "description": "The tested, tool-agnostic AGENTS.md linter — validates, scores, and autofixes AGENTS.md files.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "agents-md-lint": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "bun build ./src/cli.ts ./src/index.ts --outdir ./dist --target node --format esm --splitting && bunx tsc --emitDeclarationOnly --outDir dist",
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": ["agents.md", "agents-md", "linter", "ai", "coding-agent", "cli"],
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-gfm": "^3.0.0",
+    "micromark-extension-gfm": "^3.0.0",
+    "mdast-util-frontmatter": "^2.0.1",
+    "micromark-extension-frontmatter": "^2.0.0",
+    "yaml": "^2.5.1"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "bun-types": "latest",
+    "typescript": "^5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "directory": "packages/linter"
+  }
+}
