@@ -1,0 +1,50 @@
+{
+  "name": "agents-md-migrate",
+  "version": "0.1.0",
+  "description": "Convert legacy AI-assistant rule files (.cursorrules, CLAUDE.md, .windsurfrules, Copilot, Cline, Aider) into a single tested AGENTS.md.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "agents-md-migrate": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun build ./src/cli.ts ./src/index.ts --outdir dist --target node --format esm && tsc --emitDeclarationOnly --outDir dist",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "agents.md",
+    "agents-md",
+    "cursorrules",
+    "claude",
+    "copilot",
+    "cline",
+    "aider",
+    "windsurf",
+    "migrate",
+    "converter"
+  ]
+}
