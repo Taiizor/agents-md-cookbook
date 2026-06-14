@@ -62,6 +62,15 @@ natively by 24+ tools. One file, every agent.
      run: bunx agents-md-lint AGENTS.md   # or: npx agents-md-lint AGENTS.md
    ```
 
+   Prefer a one-line GitHub Action? Use the bundled [`action.yml`](./action.yml):
+
+   ```yaml
+   # .github/workflows/ci.yml
+   - uses: Taiizor/agents-md-cookbook@v1
+     with:
+       path: AGENTS.md
+   ```
+
 ## Compatibility at a glance
 
 | Tool | Reads `AGENTS.md`? |
