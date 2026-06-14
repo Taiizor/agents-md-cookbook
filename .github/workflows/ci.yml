@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  markdown:
+    name: Markdown lint + link check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Content lint (markdownlint-cli2)
+        run: bun run lint:md
+
+      - name: Link check (lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --exclude-mail
+            "**/*.md"
+          fail: true
+
+  # --- Integration seam: filled in by the linter plan ---------------------
+  # The agents-md-lint package (packages/linter) is added by a separate plan.
+  # Once it exists, append a job here that self-dogfoods our own linter over
+  # every template, e.g.:
+  #
+  # dogfood:
+  #   name: Lint our own templates with agents-md-lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: oven-sh/setup-bun@v2
+  #       with:
+  #         bun-version: latest
+  #     - run: bun install --frozen-lockfile
+  #     - run: bunx agents-md-lint templates/**/AGENTS.md
+  # ------------------------------------------------------------------------
