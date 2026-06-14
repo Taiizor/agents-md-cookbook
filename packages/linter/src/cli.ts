@@ -10,6 +10,7 @@ import { sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lint } from "./index.ts";
 import { applyFixes } from "./fix.ts";
+import { runAgnix } from "./engine-agnix.ts";
 import { formatText, formatJson, summarize } from "./report.ts";
 import type { LintResult } from "./types.ts";
 
@@ -22,6 +23,7 @@ interface ParsedArgs {
   quiet: boolean;
   root: string | null;
   help: boolean;
+  engine: "builtin" | "agnix";
 }
 
 const HELP = `agents-md-lint — lint your AGENTS.md
@@ -36,6 +38,7 @@ Options:
   --strict              Treat warnings as errors for the exit code.
   --quiet               Hide info-level findings.
   --root <path>         Repo root; enables freshness rules (path/script checks).
+  --engine <builtin|agnix>  Also merge findings from the agnix binary if installed.
   --help                Show this help.
 
 Default file: ./AGENTS.md
@@ -52,6 +55,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     quiet: false,
     root: null,
     help: false,
+    engine: "builtin",
   };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]!;
@@ -77,6 +81,9 @@ export function parseArgs(argv: string[]): ParsedArgs {
         break;
       case "--root":
         parsed.root = argv[++i] ?? null;
+        break;
+      case "--engine":
+        parsed.engine = argv[++i] === "agnix" ? "agnix" : "builtin";
         break;
       default:
         if (!arg.startsWith("--")) parsed.files.push(arg);
@@ -203,6 +210,17 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
       filename: file,
       ...(args.root !== null ? { root: args.root } : {}),
     });
+    if (args.engine === "agnix") {
+      const agnixFindings = runAgnix(file);
+      const seen = new Set(
+        result.findings.map((f) => `${f.ruleId}:${f.line ?? 0}:${f.message}`),
+      );
+      for (const f of agnixFindings) {
+        const key = `${f.ruleId}:${f.line ?? 0}:${f.message}`;
+        if (!seen.has(key)) result.findings.push(f);
+      }
+      result.findings.sort((a, b) => (a.line ?? 0) - (b.line ?? 0));
+    }
     if (args.quiet) {
       result.findings = result.findings.filter((f) => f.severity !== "info");
     }
