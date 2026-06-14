@@ -33,7 +33,7 @@ agents-md-lint AGENTS.md --engine agnix         # also merge agnix findings if i
 ### Flags
 
 | Flag | Description |
-|------|-------------|
+| ---- | ----------- |
 | `--fix` | Apply safe, high-confidence autofixes in place (trailing whitespace, final newline, wrap bare commands). |
 | `--format <text\|json>` | Output format. Default `text`. |
 | `--max-warnings <n>` | Fail if warnings exceed `n`. |
@@ -72,7 +72,7 @@ const results = lintAll(["AGENTS.md", "packages/api/AGENTS.md"]);
 Standalone rules run everywhere. **Freshness** rules run only with `--root` (repo-context mode).
 
 | Rule ID | Severity | Description |
-|---------|----------|-------------|
+| ------- | -------- | ----------- |
 | `AGM-001` | error | File must be valid CommonMark/GFM Markdown (detects unterminated code fences). |
 | `AMC-FILENAME` | error | File must be named exactly `AGENTS.md`. |
 | `AMC-NONEMPTY` | warn | Flags near-empty stubs (under 100 non-whitespace chars). |
