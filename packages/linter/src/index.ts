@@ -30,7 +30,10 @@ export interface LintContentOptions extends LintOptions {
 /** Lint a single AGENTS.md content string. */
 export function lint(content: string, options: LintContentOptions = {}): LintResult {
   const filename = options.filename ?? "AGENTS.md";
-  const doc = parseDocument(content, { filename, root: options.root });
+  const doc = parseDocument(content, {
+    filename,
+    ...(options.root !== undefined ? { root: options.root } : {}),
+  });
   const findings: Finding[] = [];
   for (const rule of allRules) {
     if (rule.requiresRepo && !doc.repoRoot) continue;

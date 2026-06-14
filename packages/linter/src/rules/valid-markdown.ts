@@ -16,14 +16,15 @@ export const validMarkdownRule: Rule = {
       const lastFenceIndex = doc.lines.findIndex((l) =>
         /^\s*(```|~~~)/.test(l),
       );
-      findings.push({
+      const finding: Finding = {
         ruleId: "AGM-001",
         severity: "error",
         message:
           "Unterminated fenced code block: an opening ``` has no matching closing fence.",
-        line: lastFenceIndex >= 0 ? lastFenceIndex + 1 : undefined,
         fix: "Add a closing ``` fence.",
-      });
+      };
+      if (lastFenceIndex >= 0) finding.line = lastFenceIndex + 1;
+      findings.push(finding);
     }
     return findings;
   },

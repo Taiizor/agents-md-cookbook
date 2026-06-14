@@ -1,6 +1,13 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { Glob } from "bun";
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  readdirSync,
+  type Dirent,
+} from "node:fs";
+import { sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import { lint } from "./index.ts";
 import { applyFixes } from "./fix.ts";
 import { formatText, formatJson, summarize } from "./report.ts";
@@ -80,15 +87,82 @@ export function parseArgs(argv: string[]): ParsedArgs {
   return parsed;
 }
 
+/** Translate a glob pattern into a RegExp (supports *, ?, **, character classes). */
+function globToRegExp(pattern: string): RegExp {
+  let re = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern[i]!;
+    if (c === "*") {
+      if (pattern[i + 1] === "*") {
+        // ** matches across path separators
+        re += ".*";
+        i++;
+        if (pattern[i + 1] === "/") i++;
+      } else {
+        re += "[^/]*";
+      }
+    } else if (c === "?") {
+      re += "[^/]";
+    } else if (c === "[") {
+      let j = i + 1;
+      let cls = "[";
+      if (pattern[j] === "!") {
+        cls += "^";
+        j++;
+      }
+      while (j < pattern.length && pattern[j] !== "]") {
+        cls += pattern[j];
+        j++;
+      }
+      cls += "]";
+      re += cls;
+      i = j;
+    } else if (/[.+^${}()|\\]/.test(c)) {
+      re += "\\" + c;
+    } else {
+      re += c;
+    }
+  }
+  return new RegExp("^" + re + "$");
+}
+
+/** Recursively collect files under `dir`, returning POSIX-style relative paths. */
+function walk(dir: string, base: string, acc: string[]): void {
+  let entries: Dirent[];
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry.name === "node_modules" || entry.name === ".git") continue;
+    const abs = dir === "." ? entry.name : `${dir}${sep}${entry.name}`;
+    const rel = base === "" ? entry.name : `${base}/${entry.name}`;
+    if (entry.isDirectory()) {
+      walk(abs, rel, acc);
+    } else if (entry.isFile()) {
+      acc.push(rel);
+    }
+  }
+}
+
 function expandGlobs(patterns: string[]): string[] {
   const out = new Set<string>();
+  let allFiles: string[] | null = null;
   for (const pattern of patterns) {
     if (!/[*?{}[\]]/.test(pattern)) {
       if (existsSync(pattern)) out.add(pattern);
       continue;
     }
-    const glob = new Glob(pattern);
-    for (const match of glob.scanSync(".")) out.add(match);
+    if (allFiles === null) {
+      allFiles = [];
+      walk(".", "", allFiles);
+    }
+    const normalized = pattern.split(sep).join("/").replace(/^\.\//, "");
+    const matcher = globToRegExp(normalized);
+    for (const file of allFiles) {
+      if (matcher.test(file)) out.add(file);
+    }
   }
   return [...out];
 }
@@ -127,7 +201,7 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
     }
     const result = lint(content, {
       filename: file,
-      root: args.root ?? undefined,
+      ...(args.root !== null ? { root: args.root } : {}),
     });
     if (args.quiet) {
       result.findings = result.findings.filter((f) => f.severity !== "info");
@@ -151,7 +225,18 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
 }
 
 // Direct-execution entry (node dist/cli.js ...).
-if (import.meta.main) {
+// Works under both bun and plain node: compare the invoked script to this module.
+function isMainModule(): boolean {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    return pathToFileURL(entry).href === import.meta.url;
+  } catch {
+    return false;
+  }
+}
+
+if (isMainModule()) {
   run(process.argv.slice(2))
     .then((code) => process.exit(code))
     .catch((err) => {
