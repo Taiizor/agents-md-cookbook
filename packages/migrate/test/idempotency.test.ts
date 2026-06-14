@@ -36,6 +36,21 @@ describe("idempotency", () => {
     expect(result.rootAgentsMd).toContain("Cursor rule.");
   });
 
+  test("re-running over a bare headingless rule file produces no duplicates", () => {
+    // A plain .cursorrules has no markdown heading -> headingless preamble.
+    writeFileSync(join(dir, ".cursorrules"), "Root cursor rule.\n");
+
+    const first = convert({ root: dir, nested: true, dropManual: false });
+    writeFileSync(join(dir, "AGENTS.md"), first.rootAgentsMd);
+
+    const second = convert({ root: dir, nested: true, dropManual: false });
+    writeFileSync(join(dir, "AGENTS.md"), second.rootAgentsMd);
+
+    const third = convert({ root: dir, nested: true, dropManual: false });
+    expect(second.rootAgentsMd.split("Root cursor rule.").length - 1).toBe(1);
+    expect(third.rootAgentsMd.split("Root cursor rule.").length - 1).toBe(1);
+  });
+
   test("respects a custom out filename when checking for an existing file", () => {
     writeFileSync(join(dir, "CONVENTIONS.md"), "## Code style\n\nUse type hints.\n");
     const first = convert({ root: dir, out: "GUIDE.md", nested: true, dropManual: false });

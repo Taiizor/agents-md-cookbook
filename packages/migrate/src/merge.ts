@@ -28,6 +28,13 @@ interface Section {
   body: string; // includes the heading line; full block text
 }
 
+/** The body of a section with its heading line stripped (empty for pure preamble). */
+function sectionContent(section: Section): string {
+  if (section.heading === null) return section.body;
+  const nl = section.body.indexOf("\n");
+  return nl === -1 ? "" : section.body.slice(nl + 1);
+}
+
 /** Split markdown into sections keyed by their (top-level-or-any) ATX heading. */
 function splitSections(markdown: string): Section[] {
   const lines = markdown.split("\n");
@@ -71,12 +78,27 @@ export function mergeSections(existing: string, additions: string): string {
       .filter((s) => s.heading !== null)
       .map((s) => `${s.heading}::${hashBody(s.body)}`),
   );
+  // Track existing content (heading line stripped) so we never re-append the same
+  // bare-rule block (a plain .cursorrules/.windsurfrules with no markdown heading).
+  // On a prior run such a block is appended to the root body and ends up nested
+  // under the leading "# AGENTS.md" heading, so we must compare against every
+  // existing section's content, not just headingless preambles.
+  const existingPreambleHashes = new Set(
+    existingSections
+      .map((s) => sectionContent(s))
+      .filter((content) => content.trim() !== "")
+      .map((content) => hashBody(content)),
+  );
 
   const newBlocks: string[] = [];
   for (const section of splitSections(additions)) {
     if (section.heading === null) {
-      // Preamble in additions is uncommon; append only if non-empty and unseen.
-      if (section.body.trim() !== "") newBlocks.push(section.body.trimEnd());
+      // Headingless preamble (bare rule file). Append only if non-empty and unseen.
+      if (section.body.trim() === "") continue;
+      const preambleHash = hashBody(section.body);
+      if (existingPreambleHashes.has(preambleHash)) continue;
+      existingPreambleHashes.add(preambleHash);
+      newBlocks.push(section.body.trimEnd());
       continue;
     }
     const key = `${section.heading}::${hashBody(section.body)}`;

@@ -44,4 +44,21 @@ describe("mergeSections", () => {
   test("merging into empty existing returns the additions", () => {
     expect(mergeSections("", "## A\n\nbody\n").trim()).toBe("## A\n\nbody");
   });
+
+  test("does not duplicate a headingless preamble block on re-merge", () => {
+    // A bare rule file (e.g. plain .cursorrules) renders as headingless preamble.
+    const bare = "Root cursor rule.\n";
+    const first = mergeSections("# AGENTS.md\n", bare);
+    const second = mergeSections(first, bare);
+    const third = mergeSections(second, bare);
+    expect(second.split("Root cursor rule.").length - 1).toBe(1);
+    expect(third.split("Root cursor rule.").length - 1).toBe(1);
+  });
+
+  test("appends a distinct headingless preamble block", () => {
+    const existing = "# AGENTS.md\n\nFirst bare rule.\n";
+    const merged = mergeSections(existing, "Second bare rule.\n");
+    expect(merged).toContain("First bare rule.");
+    expect(merged).toContain("Second bare rule.");
+  });
 });
