@@ -31,10 +31,21 @@ jobs:
       - name: Link check (lychee)
         uses: lycheeverse/lychee-action@v2
         with:
+          # Offline: validate internal/relative links and skip flaky external
+          # hosts. Scope to user-facing docs — templates contain placeholder
+          # paths for the consumer's own repo, and docs/superpowers holds
+          # internal planning docs; neither should be link-checked here.
           args: >-
             --no-progress
-            --exclude-mail
-            "**/*.md"
+            --offline
+            "README.md"
+            "CONTRIBUTING.md"
+            "docs/anatomy.md"
+            "docs/best-practices.md"
+            "docs/nesting-monorepos.md"
+            "docs/common-mistakes.md"
+            "packages/linter/README.md"
+            "packages/migrate/README.md"
           fail: true
 
   test-and-dogfood:
