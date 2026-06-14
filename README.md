@@ -38,7 +38,7 @@ natively by 24+ tools. One file, every agent.
 
    ```bash
    curl -fsSL \
-     https://raw.githubusercontent.com/Taiizor/agents-md-cookbook/develop/templates/typescript-node/AGENTS.md \
+     https://raw.githubusercontent.com/Taiizor/agents-md-cookbook/main/templates/typescript-node/AGENTS.md \
      -o AGENTS.md
    ```
 

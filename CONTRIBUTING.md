@@ -5,7 +5,7 @@ contributions are **new templates** and **compatibility-matrix corrections**.
 
 ## Ground rules
 
-- The default branch is `develop`; open PRs against it.
+- The default branch is `main`; open PRs against it.
 - This is a **bun workspace**. Use `bun` / `bunx` for development. (Published
   CLIs also work via `npx` for end users.)
 - Every Markdown file is content-linted and link-checked in CI. Run the checks
