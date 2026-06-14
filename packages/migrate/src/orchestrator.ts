@@ -1,4 +1,5 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   SourceFormat,
   type ConversionResult,
@@ -13,6 +14,7 @@ import { detectWindsurf, convertWindsurf } from "./converters/windsurf";
 import { detectCopilot, convertCopilot } from "./converters/copilot";
 import { detectCline, convertCline } from "./converters/cline";
 import { detectAider, convertAider } from "./converters/aider";
+import { mergeSections } from "./merge";
 
 interface FormatHandler {
   format: SourceFormat;
@@ -53,8 +55,16 @@ export function convert(options: ConvertOptions): ConversionResult {
 
   const { rootBody, nestedFiles, warnings } = rulesToMarkdown(rules, { nested, dropManual });
 
-  const rootAgentsMd =
+  const generated =
     rootBody.trim() === "" ? "# AGENTS.md\n" : `# AGENTS.md\n\n${rootBody.trim()}\n`;
+
+  const outName = options.out ?? "AGENTS.md";
+  const existingPath = join(root, outName);
+  let rootAgentsMd = generated;
+  if (existsSync(existingPath)) {
+    const existing = readFileSync(existingPath, "utf8");
+    rootAgentsMd = mergeSections(existing, rootBody.trim() === "" ? "" : `${rootBody.trim()}\n`);
+  }
 
   return { rootAgentsMd, nestedFiles, warnings };
 }
