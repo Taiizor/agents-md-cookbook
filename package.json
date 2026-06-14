@@ -13,8 +13,8 @@
     "packages/*"
   ],
   "scripts": {
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#**/CHANGELOG.md\"",
-    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\" \"#**/CHANGELOG.md\""
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules/**\" \"#**/CHANGELOG.md\" \"#docs/superpowers/**\" \"#packages/*/test/fixtures/**\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#**/node_modules/**\" \"#**/CHANGELOG.md\" \"#docs/superpowers/**\" \"#packages/*/test/fixtures/**\""
   },
   "devDependencies": {
     "markdownlint-cli2": "0.15.0"

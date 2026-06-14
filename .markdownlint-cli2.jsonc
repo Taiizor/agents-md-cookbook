@@ -16,8 +16,9 @@
   },
   "globs": ["**/*.md"],
   "ignores": [
-    "node_modules",
+    "**/node_modules/**",
     "**/CHANGELOG.md",
-    "docs/superpowers/**"
+    "docs/superpowers/**",
+    "packages/*/test/fixtures/**"
   ]
 }
