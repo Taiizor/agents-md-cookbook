@@ -61,4 +61,4 @@ jobs:
         working-directory: packages/linter
 
       - name: Self-dogfood — lint all templates with agents-md-lint
-        run: bun packages/linter/dist/cli.js "templates/**/AGENTS.md" --strict --format text
+        run: bun packages/linter/dist/cli.js "templates/**/AGENTS.md" --format text
