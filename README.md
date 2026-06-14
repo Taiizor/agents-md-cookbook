@@ -4,6 +4,8 @@
 
 [![CI](https://github.com/Taiizor/agents-md-cookbook/actions/workflows/ci.yml/badge.svg)](https://github.com/Taiizor/agents-md-cookbook/actions/workflows/ci.yml)
 [![npm: agents-md-lint](https://img.shields.io/npm/v/agents-md-lint?label=agents-md-lint)](https://www.npmjs.com/package/agents-md-lint)
+[![npm: agents-md-migrate](https://img.shields.io/npm/v/agents-md-migrate?label=agents-md-migrate)](https://www.npmjs.com/package/agents-md-migrate)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-agents--md--lint-2ea44f?logo=github)](https://github.com/marketplace/actions/agents-md-lint)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/Taiizor/agents-md-cookbook?style=social)](https://github.com/Taiizor/agents-md-cookbook/stargazers)
 
