@@ -17,7 +17,7 @@
     "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#**/node_modules/**\" \"#**/CHANGELOG.md\" \"#docs/superpowers/**\" \"#packages/*/test/fixtures/**\""
   },
   "devDependencies": {
-    "markdownlint-cli2": "0.15.0"
+    "markdownlint-cli2": "0.22.1"
   },
   "engines": {
     "node": ">=20"
