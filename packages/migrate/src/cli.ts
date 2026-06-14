@@ -129,6 +129,14 @@ function writeOutputs(
   }
 }
 
+// `import.meta.main` is provided at runtime by Bun and by Node (>=20.11),
+// but the standard `@types/node` ImportMeta type does not declare it.
+declare global {
+  interface ImportMeta {
+    main?: boolean;
+  }
+}
+
 // Self-invoke when run as a binary (not when imported by tests).
 if (import.meta.main) {
   run(process.argv.slice(2)).then((code) => process.exit(code));
