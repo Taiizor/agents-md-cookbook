@@ -8,6 +8,13 @@ Java + Spring Boot service. Replace the bracketed bits with your details.
 - Build: **Maven** via the wrapper `./mvnw` (use the wrapper, not a global mvn).
 - Tests: JUnit 5 + Spring Boot Test. Format: Spotless (google-java-format).
 
+## Project Structure
+
+- `src/main/java` — application code (controllers, services, repositories).
+- `src/main/resources` — `application.yml`, `db/migration` (Flyway `V*` files).
+- `src/test/java` — tests mirroring the main package layout.
+- `pom.xml` (or `build.gradle`) — dependencies and build config.
+
 ## Setup
 
 ```bash
@@ -68,13 +75,15 @@ public class OrderService {
 
 ## Boundaries
 
-- **Do** read `.env.example` and `application.yml` for config; **never** commit
-  secrets, `.env`, or real credentials.
-- **Do** edit application code; **ask first** before changing `pom.xml`
-  dependencies or Spring auto-config.
-- **Do** add a Flyway migration under `src/main/resources/db/migration` for
-  schema changes; **never** edit an applied `V*` migration.
-- **Never** disable a failing test with `@Disabled` to make the build green.
+- Always: read `.env.example` and `application.yml` for config values.
+- Always: edit application code under `src/main/java` and add matching tests.
+- Always: add a new Flyway migration under `src/main/resources/db/migration`
+  for schema changes.
+- Always: fix a failing test by correcting code or the test, not by hiding it.
+- Ask first: before changing `pom.xml` dependencies or Spring auto-config.
+- Ask first: before editing an already-applied `V*` migration.
+- Never: commit secrets, `.env`, or real credentials.
+- Never: disable a failing test with `@Disabled` to make the build green.
 
 ## More
 

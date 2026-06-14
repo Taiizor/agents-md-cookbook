@@ -7,6 +7,12 @@ Ruby on Rails application. Replace the bracketed bits with your details.
 - Ruby 3.3, Rails 7.1.
 - Dependency manager: Bundler. Lint: RuboCop. Tests: RSpec.
 
+## Project Structure
+
+- `app/` — MVC code: `models/`, `controllers/`, `views/`, `jobs/`, `services/`.
+- `config/` — routes, environments, `credentials`; `db/` — schema + migrations.
+- `spec/` — RSpec tests mirroring `app/`; `Gemfile` — dependencies.
+
 ## Setup
 
 ```bash
@@ -64,13 +70,15 @@ end
 
 ## Boundaries
 
-- **Do** read `.env.example` and `config/credentials`; **never** commit
-  `master.key`, secrets, or `.env`.
-- **Do** generate a migration for schema changes; **never** edit an applied
-  migration — add a new one and re-run `db:migrate`.
-- **Do** edit `app/**`; **ask first** before changing `Gemfile`, initializers,
-  or routes that affect auth.
-- **Never** skip strong parameters or interpolate user input into SQL.
+- Always: edit `app/**`, read `.env.example` for required config, and run
+  `rubocop -A` plus `rspec` before pushing.
+- Always: generate a new migration for schema changes and re-run `db:migrate`.
+- Always: use strong parameters and parameterized queries (`where(id: id)`).
+- Ask first: before changing the `Gemfile`, initializers, or routes that
+  affect auth or external integrations.
+- Never: edit an already-applied migration — add a new one instead.
+- Never: skip strong parameters or interpolate user input into SQL.
+- Never commit secrets, `master.key`, or `.env`.
 
 ## More
 

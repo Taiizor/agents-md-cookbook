@@ -31,6 +31,14 @@ pnpm typecheck        # tsc --noEmit
 
 Verify a single file fast: `pnpm vitest run src/foo.test.ts`.
 
+## Project Structure
+
+- `src/` — application/library source (`*.ts`); entry point `src/index.ts`.
+- `src/**/*.test.ts` — co-located Vitest tests.
+- `package.json`, `tsconfig.json` — deps, scripts, strict compiler config.
+- `dist/` — `tsc` build output (generated; do not edit).
+- `docs/` — architecture and API references.
+
 ## Code style
 
 - Strict TypeScript: no `any`, no non-null `!` unless justified in a comment.
@@ -65,14 +73,15 @@ export function listItems(raw: unknown) {
 
 ## Boundaries
 
-- **Do** read `.env.example` to learn required config; **never** commit secrets,
-  `.env`, or real credentials.
-- **Do** edit `src/**`; **ask first** before changing `package.json` deps,
-  CI workflows, or anything under `infra/`.
-- **Do** add a migration when changing the DB schema; **never** edit an existing
-  applied migration file — add a new one.
-- **Never** disable lint/type errors with broad `// eslint-disable` or `// @ts-ignore`
-  to make CI pass; fix the cause.
+- Always: edit `src/**` and its co-located `*.test.ts` files freely.
+- Always: read `.env.example` to learn required config keys.
+- Always: add a new migration when changing the DB schema.
+- Always: fix the root cause of lint/type errors instead of suppressing them.
+- Ask first: changing `package.json` deps, CI workflows, or anything under `infra/`.
+- Ask first: editing `tsconfig.json` compiler options or build output paths.
+- Never: commit secrets, `.env`, or real credentials.
+- Never: edit an already-applied migration file — add a new one instead.
+- Never: silence errors with broad `// eslint-disable` or `// @ts-ignore` to pass CI.
 
 ## More
 

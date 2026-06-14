@@ -5,9 +5,17 @@ keeps its own nested `AGENTS.md` with package-specific commands.
 
 ## Stack
 
-- Workspace manager: **pnpm 9 workspaces** + Turborepo for task running.
-- Packages live under `packages/*` and `apps/*`.
-- Per-package toolchains vary; defer to each package's nested `AGENTS.md`.
+- Workspace manager: **pnpm 9.x workspaces** + **Turborepo 2.x** for task running.
+- Runtime: **Node 20.x** (see `.nvmrc`); per-package toolchains vary.
+- Packages live under `packages/*` and `apps/*`; defer to each package's nested `AGENTS.md`.
+
+## Project Structure
+
+- `packages/*` — shared libraries (e.g. `@acme/core`, `@acme/config`).
+- `apps/*` — deployable apps (e.g. `apps/web`, `apps/api`).
+- `pnpm-workspace.yaml` — workspace package globs.
+- `turbo.json` — task pipeline and dependency graph.
+- `package.json` — root scripts and shared devDependencies.
 
 ## Setup
 
@@ -69,14 +77,14 @@ Tests: Playwright in `e2e/`. Never call the DB directly — use `@acme/core`.
 
 ## Boundaries
 
-- **Do** edit within a single package per PR when possible; **ask first**
-  before changing the workspace root `package.json`, `turbo.json`, or
-  `pnpm-workspace.yaml`.
-- **Do** add a new package under `packages/`; **never** introduce a circular
-  dependency between packages (CI rejects it).
-- **Do** read `.env.example`; **never** commit secrets or `.env`.
-- **Never** bump a shared dependency in one package only — change it at the
-  root so versions stay aligned.
+- Always: scope each PR to a single package when possible and use `--filter`.
+- Always: add new packages under `packages/` and import via published entry points (`@acme/core`).
+- Always: bump shared dependencies at the root so versions stay aligned across packages.
+- Always: read `.env.example` for the config a package expects.
+- Ask first: before changing the workspace root `package.json`, `turbo.json`, or `pnpm-workspace.yaml`.
+- Ask first: before adding a cross-package dependency (it reshapes the build graph).
+- Never: introduce a circular dependency between packages (CI rejects it).
+- Never: commit secrets or `.env`.
 
 ## More
 

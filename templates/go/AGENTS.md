@@ -7,6 +7,13 @@ Go module. Replace the bracketed bits with your project's details.
 - Go 1.22 (modules; module path in `go.mod`).
 - Lint: golangci-lint. Format: gofmt + goimports. Tests: standard `go test`.
 
+## Project Structure
+
+- `cmd/` — entrypoints (one subdir per binary, e.g. `cmd/app`).
+- `internal/` — private application packages (not importable externally).
+- `pkg/` — reusable library packages.
+- `go.mod` / `go.sum` — module definition and dependency checksums.
+
 ## Setup
 
 ```bash
@@ -63,12 +70,17 @@ func LoadConfig(path string) (*Config, error) {
 
 ## Boundaries
 
-- **Do** read `.env.example`; **never** commit secrets or `.env`.
-- **Do** edit package code; **ask first** before running `go get` to add a new
-  dependency or before touching `go.mod`/`go.sum` by hand.
-- **Do** run `go mod tidy` after dependency changes; **never** hand-edit
-  `go.sum`.
-- **Never** suppress vet/lint findings with `//nolint` without a reason comment.
+- Always: edit package code under `cmd/`, `internal/`, and `pkg/`.
+- Always: read `.env.example` for required config and run `go mod tidy` after
+  dependency changes.
+- Always: add a `//nolint` reason comment when you must suppress a finding.
+- Ask first: before running `go get` to add a new dependency or editing
+  `go.mod` / `go.sum` by hand.
+- Ask first: before bumping the Go version in `go.mod` or running `go mod tidy
+  -go=<newer>`.
+- Never: commit secrets (`.env`, keys, tokens) — they belong in `.env`, which
+  is git-ignored.
+- Never: suppress vet/lint findings with a bare `//nolint` (no reason).
 
 ## More
 

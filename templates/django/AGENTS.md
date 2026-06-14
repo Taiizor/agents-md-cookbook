@@ -2,6 +2,13 @@
 
 Django web application. Replace the bracketed bits with your details.
 
+## Project Structure
+
+- `config/` — project settings, URLs, WSGI/ASGI entry points.
+- `apps/` — Django apps (models, views, services, `tests/`).
+- `templates/`, `static/` — server-rendered templates and static assets.
+- `manage.py` — Django CLI; `pyproject.toml` — deps managed by uv.
+
 ## Stack
 
 - Python 3.12, Django 5.0.
@@ -59,13 +66,13 @@ def order_detail(request, pk):
 
 ## Boundaries
 
-- **Do** read `.env.example` and `settings.py` for config; **never** commit
-  `SECRET_KEY`, `.env`, or real credentials.
-- **Do** run `makemigrations` when models change; **never** edit an applied
-  migration — add a new one.
-- **Do** edit app code; **ask first** before changing `settings.py`,
-  middleware, or installed apps.
-- **Never** set `DEBUG = True` in committed settings or expose admin without auth.
+- Always: read `.env.example` and `config/settings.py` for configuration.
+- Always: run `makemigrations` plus `migrate` when models change.
+- Always: add a new migration to fix data; keep `DEBUG = False` in committed settings.
+- Ask first: before editing `config/settings.py`, middleware, or `INSTALLED_APPS`.
+- Ask first: before adding a dependency or running `migrate` against shared databases.
+- Never: commit secrets (`SECRET_KEY`, `.env`, real credentials).
+- Never: edit an applied migration in place, or expose `/admin` without auth.
 
 ## More
 

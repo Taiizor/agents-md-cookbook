@@ -26,6 +26,14 @@ uv run mypy app                          # type check
 
 Interactive docs are served at `/docs` when the app is running.
 
+## Project Structure
+
+- `app/` — application package: `main.py` (ASGI app), `routers/`, `models/`.
+- `app/deps.py` — shared `Depends` providers (db sessions, clients).
+- `tests/` — pytest suites, mirroring `app/`.
+- `migrations/` — Alembic migration scripts.
+- `pyproject.toml` — deps, tool config (Ruff, mypy, pytest).
+
 ## Code style
 
 - Define request/response models with Pydantic; let FastAPI validate at the edge.
@@ -65,13 +73,15 @@ async def create_order(body: OrderIn, db=Depends(get_db)):
 
 ## Boundaries
 
-- **Do** read `.env.example` for config; **never** commit secrets or `.env`.
-- **Do** add an Alembic migration for schema changes; **never** edit an applied
-  migration.
-- **Do** edit `app/**`; **ask first** before changing dependency injection
-  wiring or `pyproject.toml` deps.
-- **Never** disable Pydantic validation or accept raw `dict` request bodies to
-  "save time."
+- Always: read `.env.example` for required config and use env vars for secrets.
+- Always: edit `app/**` and add a new Alembic migration for schema changes.
+- Always: validate input with Pydantic models at the edge; run the test suite
+  before pushing.
+- Ask first: changing dependency-injection wiring, `pyproject.toml` deps, or
+  CI workflows.
+- Ask first: editing an already-applied migration — prefer adding a new one.
+- Never: commit secrets, `.env`, or real credentials.
+- Never: disable Pydantic validation or accept raw `dict` request bodies.
 
 ## More
 

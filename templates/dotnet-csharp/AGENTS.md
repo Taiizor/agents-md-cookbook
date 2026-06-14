@@ -4,8 +4,8 @@
 
 ## Stack
 
-- .NET 8 (LTS), C# 12, nullable reference types enabled.
-- Build/test: `dotnet` CLI. Tests: xUnit. Format: `dotnet format`.
+- .NET 8.0 (LTS) SDK, C# 12, nullable reference types enabled.
+- Build/test: `dotnet` CLI 8.0.x. Tests: xUnit. Format: `dotnet format`.
 
 ## Setup
 
@@ -24,6 +24,14 @@ dotnet test --filter FullyQualifiedName~OrderServiceTests   # one test class
 dotnet format                           # apply formatting + analyzers
 dotnet format --verify-no-changes       # format check (used in CI)
 ```
+
+## Project Structure
+
+- `src/Api/` — entry-point web/API project (`Program.cs`, controllers).
+- `src/<Domain>/` — domain & application class libraries.
+- `tests/<Project>.Tests/` — xUnit test projects, one per `src` project.
+- `*.sln`, `Directory.Build.props` — solution and shared MSBuild settings.
+- `appsettings.json`, `.env.example` — config templates (no secrets).
 
 ## Code style
 
@@ -60,13 +68,14 @@ public sealed class OrderService(IOrderRepository repo)
 
 ## Boundaries
 
-- **Do** read `.env.example` and `appsettings.json`; **never** commit secrets,
-  `.env`, or `appsettings.*.json` with real values.
-- **Do** edit project code; **ask first** before adding NuGet packages or
-  editing `.csproj` `TargetFramework`.
-- **Do** add an EF Core migration (`dotnet ef migrations add`) for schema
-  changes; **never** edit an applied migration's `Up`/`Down`.
-- **Never** suppress analyzer warnings with `#pragma warning disable` to pass CI.
+- Always: read `.env.example` / `appsettings.json` for config keys.
+- Always: edit project source under `src/` and add tests under `tests/`.
+- Always: add a new EF Core migration (`dotnet ef migrations add`) for schema changes.
+- Always: fix the root cause when an analyzer flags code.
+- Ask first: before adding NuGet packages or changing `.csproj` `TargetFramework`.
+- Ask first: before editing an already-applied migration's `Up`/`Down`.
+- Never commit secrets, `.env`, or `appsettings.*.json` with real values.
+- Never suppress analyzer warnings with `#pragma warning disable` to pass CI.
 
 ## More
 

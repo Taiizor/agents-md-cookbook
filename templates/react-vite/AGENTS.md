@@ -4,9 +4,17 @@ React SPA built with Vite. Replace the bracketed bits with your details.
 
 ## Stack
 
-- React 18 + TypeScript strict, bundled by Vite 5.
-- Package manager: **pnpm 9**. Tests: Vitest + Testing Library.
+- React 18 + TypeScript strict, bundled by Vite 5. Runtime: Node 20.x.
+- Package manager: **pnpm 9.x**. Tests: Vitest + Testing Library.
 - Lint/format: ESLint + Prettier.
+
+## Project Structure
+
+- `src/` — components, hooks, and the typed API client in `src/api/`.
+- `src/main.tsx` / `index.html` — Vite entry point and HTML shell.
+- `*.test.tsx` — tests co-located next to the code they cover.
+- `vite.config.ts`, `tsconfig.json` — build and type config.
+- `.env.example` — template for `VITE_`-prefixed client vars.
 
 ## Setup
 
@@ -29,10 +37,10 @@ pnpm typecheck         # tsc --noEmit
 
 ## Code style
 
-- Function components + hooks only; no class components.
+- Always use function components + hooks; class components are not allowed.
 - Keep components pure; side effects go in `useEffect` or event handlers.
-- Only `VITE_`-prefixed env vars are exposed to the client — never put secrets
-  in any env var the bundle can read.
+- Only `VITE_`-prefixed env vars reach the client, so always keep secrets
+  out of any env var the bundle can read.
 
 Example — a small, testable component:
 
@@ -40,7 +48,7 @@ Example — a small, testable component:
 type Props = { items: string[] };
 
 export function ItemList({ items }: Props) {
-  if (items.length === 0) return <p>No items</p>;
+  if (items.length === 0) return <p>Empty list</p>;
   return <ul>{items.map((i) => <li key={i}>{i}</li>)}</ul>;
 }
 ```
@@ -60,12 +68,15 @@ export function ItemList({ items }: Props) {
 
 ## Boundaries
 
-- **Do** call backends from a typed API client in `src/api`; **ask first**
-  before adding a new runtime dependency.
-- **Do** keep secrets server-side; **never** ship an API secret in a `VITE_*`
-  var or commit `.env`.
-- **Do** edit `src/**`; **ask first** before changing `vite.config.ts`.
-- **Never** disable ESLint inline just to pass CI; fix the cause.
+- Always: edit code under `src/**` and call backends through the typed API
+  client in `src/api/`.
+- Always: keep secrets server-side and fix lint failures at the source.
+- Always: run `pnpm lint && pnpm typecheck && pnpm test` before pushing.
+- Ask first: before adding a runtime dependency or changing `vite.config.ts`,
+  `tsconfig.json`, or other build config.
+- Never: ship an API secret in a `VITE_*` var or disable ESLint inline to
+  pass CI.
+- Never commit secrets, including `.env`.
 
 ## More
 

@@ -8,6 +8,13 @@ Data science / ML project. Replace the bracketed bits with your details.
 - Dependency/runner: **uv**. Lint/format: Ruff. Tests: pytest.
 - Experiment tracking: MLflow. Notebooks live in `notebooks/`.
 
+## Project Structure
+
+- `src/` — reusable pipeline, training, and feature code (imported by notebooks).
+- `notebooks/` — exploratory analysis; `configs/*.yaml` — experiment configs.
+- `tests/` — pytest suite for transforms/features; `data/` — local data (gitignored).
+- `pyproject.toml` — deps and tooling; `docs/architecture.md` — data lineage.
+
 ## Setup
 
 ```bash
@@ -58,13 +65,16 @@ def split(df, *, seed: int = 42):
 
 ## Boundaries
 
-- **Do** keep large data out of git — use the configured data store/DVC;
-  **never** commit raw datasets, model weights, or `.env`.
-- **Do** strip notebook outputs before committing; **never** commit a notebook
-  with embedded secrets or PII in cell output.
-- **Do** edit `src/**` and `configs/**`; **ask first** before changing the
-  data schema or deleting an MLflow experiment.
-- **Never** train on the test split or leak target columns into features.
+- Always: keep large data out of git via the configured data store/DVC, and
+  reference datasets/weights by path or version id instead of committing them.
+- Always: strip notebook outputs before committing and edit `src/**` and
+  `configs/**` freely.
+- Always: split train/val/test before fitting and fit transforms on the train
+  split only, so target columns never leak into features.
+- Ask first: before changing the data schema or deleting an MLflow experiment.
+- Never: commit secrets (`.env`, API keys), raw datasets, model weights, or a
+  notebook with PII in cell output.
+- Never: train on the test split or leak target columns into features.
 
 ## More
 

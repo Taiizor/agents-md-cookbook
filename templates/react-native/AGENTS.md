@@ -8,6 +8,14 @@ React Native (Expo) mobile app. Replace the bracketed bits with your details.
 - Package manager: **pnpm 9**. Tests: Jest + React Native Testing Library.
 - Lint/format: ESLint + Prettier.
 
+## Project Structure
+
+- `app/` — Expo Router routes (file-based navigation).
+- `components/` — reusable UI components.
+- `assets/` — images, fonts, and static files.
+- `app.config.ts` — Expo app config; `package.json` — scripts & deps.
+- `ios/`, `android/` — generated native projects (Expo prebuild).
+
 ## Setup
 
 ```bash
@@ -64,13 +72,16 @@ export default function Greeting({ name }: Props) {
 
 ## Boundaries
 
-- **Do** put public config in `EXPO_PUBLIC_*`; **never** ship an API secret in
-  the client bundle or commit `.env`.
-- **Do** edit `app/**` and `components/**`; **ask first** before changing
-  `app.json`/`app.config.ts`, native modules, or EAS build config.
-- **Do** keep `ios/` and `android/` generated; **never** hand-edit native
-  folders if the project uses Expo prebuild.
-- **Never** disable ESLint inline just to pass CI; fix the cause.
+- Always: edit `app/**` and `components/**`, and put public config in
+  `EXPO_PUBLIC_*` so secrets stay on the backend.
+- Always: regenerate `ios/`/`android/` via Expo prebuild instead of editing them.
+- Always: fix the underlying lint error rather than suppressing it.
+- Always: run `pnpm lint && pnpm typecheck && pnpm test` before opening a PR.
+- Ask first: before changing `app.config.ts`, native modules, or EAS build config.
+- Ask first: before adding a dependency that requires a native rebuild.
+- Never: ship an API secret in the client bundle or hand-edit native folders.
+- Never: disable ESLint inline just to pass CI.
+- Never commit secrets.
 
 ## More
 

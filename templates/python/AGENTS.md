@@ -8,6 +8,14 @@ Generic Python project. Replace the bracketed bits with your project's details.
 - Dependency/runner: **uv** (use `uv`, never bare `pip` in the project venv).
 - Lint + format: Ruff. Type check: mypy. Tests: pytest.
 
+## Project Structure
+
+- `src/` — application package(s); importable code lives here.
+- `tests/` — pytest suite, mirrors `src/` layout (`test_*.py`).
+- `pyproject.toml` — project metadata, deps, and tool config (Ruff, mypy).
+- `uv.lock` — pinned, resolved dependency lockfile.
+- `docs/` — architecture notes and runbook.
+
 ## Setup
 
 ```bash
@@ -66,14 +74,14 @@ def total_qty(items: list[Item]) -> int:
 
 ## Boundaries
 
-- **Do** read `.env.example` for required config; **never** commit secrets,
-  `.env`, or credentials.
-- **Do** edit `src/**` and `tests/**`; **ask first** before changing
-  `pyproject.toml` dependencies or CI workflows.
-- **Do** add a new Alembic migration for schema changes; **never** edit an
-  already-applied migration.
-- **Never** silence type/lint errors with blanket `# type: ignore` or
-  `# noqa`; fix the underlying issue.
+- Always: read `.env.example` for required config and keep `.env` local.
+- Always: edit `src/**` and `tests/**` to implement and cover changes.
+- Always: fix the underlying type/lint error instead of suppressing it.
+- Ask first: before changing `pyproject.toml` dependencies or CI workflows.
+- Ask first: before deleting tests or lowering coverage thresholds.
+- Never: commit secrets, `.env`, or credentials.
+- Never: introduce a new runtime dependency without checking existing utils.
+- Never: silence errors with blanket `# type: ignore` or `# noqa`.
 
 ## More
 

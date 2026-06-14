@@ -8,6 +8,14 @@ Next.js app (App Router). Replace the bracketed bits with your details.
 - Package manager: **pnpm 9**. Tests: Vitest (unit) + Playwright (e2e).
 - Lint/format: ESLint (next config) + Prettier.
 
+## Project Structure
+
+- `app/` — App Router routes, layouts, and route handlers (server by default).
+- `components/` — shared React components; co-locate route-specific ones under `app/`.
+- `lib/` — server utilities, data access, and `NEXT_PUBLIC_*`-aware config.
+- `e2e/` — Playwright specs; unit tests live as `*.test.tsx` beside source.
+- `next.config.js`, `package.json` — build config and scripts.
+
 ## Setup
 
 ```bash
@@ -61,12 +69,15 @@ export default async function OrdersPage() {
 
 ## Boundaries
 
-- **Do** put browser-safe config in `NEXT_PUBLIC_*`; **never** reference a
-  server-only secret inside a `"use client"` component.
-- **Do** edit `app/**` and `components/**`; **ask first** before changing
-  `next.config.js`, middleware, or auth.
-- **Do** read `.env.example`; **never** commit `.env.local` or secrets.
-- **Never** disable ESLint rules inline to ship; fix the cause.
+- Always: edit `app/**`, `components/**`, and `lib/**`, and keep browser-safe
+  config in `NEXT_PUBLIC_*` vars.
+- Always: read `.env.example` and add new keys there with a placeholder value.
+- Always: fix the underlying issue when ESLint or `tsc` complains.
+- Ask first: before changing `next.config.js`, middleware, auth, or DB schema.
+- Ask first: before adding a new dependency or bumping a major version.
+- Never: reference a server-only secret inside a `"use client"` component.
+- Never: disable ESLint rules inline just to ship.
+- Never: commit secrets (`.env.local` and real keys stay out of git).
 
 ## More
 

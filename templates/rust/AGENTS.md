@@ -4,8 +4,15 @@ Rust crate/workspace. Replace the bracketed bits with your project's details.
 
 ## Stack
 
-- Rust stable (pinned in `rust-toolchain.toml`), 2021 edition.
-- Build/test: Cargo (+ cargo-nextest). Lint: Clippy. Format: rustfmt.
+- Rust 1.79 stable (pinned in `rust-toolchain.toml`), 2021 edition.
+- Build/test: Cargo 1.79 (+ cargo-nextest 0.9). Lint: Clippy. Format: rustfmt.
+
+## Project Structure
+
+- `src/` — crate source (`main.rs` for binaries, `lib.rs` for libraries).
+- `tests/` — integration tests; unit tests live in `#[cfg(test)]` modules.
+- `Cargo.toml` / `Cargo.lock` — dependencies and the pinned dependency graph.
+- `rust-toolchain.toml` — pinned compiler version for reproducible builds.
 
 ## Setup
 
@@ -61,12 +68,15 @@ pub fn load(path: &Path) -> Result<Config, ConfigError> {
 
 ## Boundaries
 
-- **Do** edit crate source; **ask first** before adding a dependency with
-  `cargo add` (it changes `Cargo.toml`/`Cargo.lock`).
-- **Do** keep `unsafe` blocks tiny and documented with a `// SAFETY:` comment;
-  **never** add `unsafe` to silence the borrow checker.
-- **Do** read `.env.example`; **never** commit secrets or `.env`.
-- **Never** commit with `#[allow(...)]` added only to pass CI; fix the lint.
+- Always: edit crate source freely and keep it `fmt`-clean and `clippy`-clean.
+- Always: keep `unsafe` blocks tiny and documented with a `// SAFETY:` comment.
+- Always: read `.env.example` to discover required configuration.
+- Ask first: add or upgrade a dependency via `cargo add` (it edits
+  `Cargo.toml`/`Cargo.lock`).
+- Ask first: bump the pinned toolchain in `rust-toolchain.toml`.
+- Never: add `unsafe` to silence the borrow checker.
+- Never: commit a `#[allow(...)]` added only to pass CI; fix the lint instead.
+- Never commit secrets or `.env`.
 
 ## More
 
