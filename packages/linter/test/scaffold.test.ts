@@ -18,7 +18,7 @@ describe("agents-md-lint scaffold", () => {
   });
 
   test("package exposes the agents-md-lint bin", () => {
-    expect(pkg.bin).toMatchObject({ "agents-md-lint": "./dist/cli.js" });
+    expect(pkg.bin).toMatchObject({ "agents-md-lint": "dist/cli.js" });
   });
 
   test("package declares the markdown parsing dependencies", () => {
