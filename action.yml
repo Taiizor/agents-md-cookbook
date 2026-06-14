@@ -1,0 +1,39 @@
+name: agents-md-lint
+description: Lint your AGENTS.md against tool-agnostic best practices and fail CI on regressions.
+author: agents-md-cookbook
+branding:
+  icon: check-circle
+  color: green
+inputs:
+  path:
+    description: File or glob to lint.
+    required: false
+    default: "AGENTS.md"
+  strict:
+    description: Treat warnings as errors (true/false).
+    required: false
+    default: "false"
+  max-warnings:
+    description: Fail if warnings exceed this count. Empty disables the check.
+    required: false
+    default: ""
+  format:
+    description: Output format (text or json).
+    required: false
+    default: "text"
+runs:
+  using: composite
+  steps:
+    - name: Run agents-md-lint
+      shell: bash
+      run: |
+        set -euo pipefail
+        ARGS=("${{ inputs.path }}")
+        if [ "${{ inputs.strict }}" = "true" ]; then
+          ARGS+=("--strict")
+        fi
+        if [ -n "${{ inputs.max-warnings }}" ]; then
+          ARGS+=("--max-warnings" "${{ inputs.max-warnings }}")
+        fi
+        ARGS+=("--format" "${{ inputs.format }}")
+        npx --yes agents-md-lint "${ARGS[@]}"
