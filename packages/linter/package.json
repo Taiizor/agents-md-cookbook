@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "agents-md-lint": "./dist/cli.js"
+    "agents-md-lint": "dist/cli.js"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
