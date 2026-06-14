@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, dirname, relative, sep, posix } from "node:path";
+import { join, dirname, relative, isAbsolute, sep, posix } from "node:path";
 import { SourceFormat, type ParsedRule } from "../types";
 
 /** Recursively find all CLAUDE.md files (excluding CLAUDE.local.md), relative to root. */
@@ -51,8 +51,12 @@ function resolveImports(
     const m = !inFence ? /^\s*@([^\s`]+)\s*$/.exec(line) : null;
     if (m) {
       const target = join(dirname(importerAbs), m[1]!);
+      const rel = relative(root, target);
       const key = target.toLowerCase();
-      if (existsSync(target) && statSync(target).isFile() && !seen.has(key)) {
+      // Stay within the repo root: never inline a file resolved outside it
+      // (e.g. `@../../../etc/passwd` or an absolute path from a hostile file).
+      const insideRoot = rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
+      if (insideRoot && existsSync(target) && statSync(target).isFile() && !seen.has(key)) {
         seen.add(key);
         const imported = readFileSync(target, "utf8");
         out.push(resolveImports(imported, target, root, depth - 1, seen).trimEnd());

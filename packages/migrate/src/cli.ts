@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { detect, convert } from "./orchestrator";

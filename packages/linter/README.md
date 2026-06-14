@@ -59,7 +59,7 @@ const results = lintAll(["AGENTS.md", "packages/api/AGENTS.md"]);
 ## GitHub Action
 
 ```yaml
-- uses: agents-md-cookbook/agents-md-cookbook@v1
+- uses: Taiizor/agents-md-cookbook@v1
   with:
     path: "AGENTS.md"
     strict: "true"
@@ -91,7 +91,7 @@ Standalone rules run everywhere. **Freshness** rules run only with `--root` (rep
 | `AMC-SCRIPT` | warn (freshness) | Referenced `package.json` scripts must exist. |
 | `AMC-STALE` | info (freshness) | Flags TODO/FIXME markers and stale years. |
 
-Rule IDs in the `AGM-`/`XP-` namespaces are reused from the prior-art [agnix](https://github.com/) taxonomy for interoperability; `AMC-` IDs are specific to this kit.
+Rule IDs in the `AGM-`/`XP-` namespaces are reused from the prior-art [agnix](https://github.com/agent-sh/agnix) taxonomy for interoperability; `AMC-` IDs are specific to this kit.
 
 ## Scoring
 
@@ -99,4 +99,4 @@ Each file gets a 0-100 score and a letter grade (A >= 90, B >= 80, C >= 70, D >=
 
 ## License
 
-MIT — part of [agents-md-cookbook](https://github.com/).
+MIT — part of [agents-md-cookbook](https://github.com/Taiizor/agents-md-cookbook).
