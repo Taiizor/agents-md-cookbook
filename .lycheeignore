@@ -1,0 +1,6 @@
+# Local anchors and template placeholders the checker should not resolve.
+^#
+mailto:
+# npm package pages for tools published by sibling plans (may 404 pre-release).
+https://www.npmjs.com/package/agents-md-lint
+https://www.npmjs.com/package/agents-md-migrate

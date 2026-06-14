@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Bun
+bun.lockb
+.bun/
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local

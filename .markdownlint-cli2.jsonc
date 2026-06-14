@@ -1,0 +1,23 @@
+{
+  // markdownlint-cli2 config for agents-md-cookbook content.
+  // Rationale: AGENTS.md templates are prose-heavy and intentionally use
+  // long command lines, inline HTML badges, and duplicated section names
+  // across template files, so a few default rules are relaxed.
+  "config": {
+    "default": true,
+    "MD013": false, // line-length: command lines and tables exceed 80 chars
+    "MD024": { "siblings_only": true }, // allow repeated headings across sections
+    "MD033": false, // allow inline HTML (badge <img>, <sub>, <details>)
+    "MD041": false, // first line need not be a top-level heading (badges/comments)
+    "MD046": { "style": "fenced" }, // require fenced code blocks
+    "MD048": { "style": "backtick" }, // require backtick fences
+    "MD049": { "style": "asterisk" },
+    "MD050": { "style": "asterisk" }
+  },
+  "globs": ["**/*.md"],
+  "ignores": [
+    "node_modules",
+    "**/CHANGELOG.md",
+    "docs/superpowers/**"
+  ]
+}
