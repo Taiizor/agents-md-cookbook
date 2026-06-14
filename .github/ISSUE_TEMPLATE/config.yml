@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions, ideas & show-and-tell
+    url: https://github.com/Taiizor/agents-md-cookbook/discussions
+    about: Ask how to write a good AGENTS.md, share yours, or propose ideas in Discussions.
+  - name: 📖 The AGENTS.md standard
+    url: https://agents.md
+    about: Read the upstream AGENTS.md specification.
