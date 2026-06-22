@@ -28,12 +28,12 @@
   },
   "keywords": ["agents.md", "agents-md", "linter", "ai", "coding-agent", "cli"],
   "dependencies": {
-    "mdast-util-from-markdown": "^2.0.2",
-    "mdast-util-gfm": "^3.0.0",
+    "mdast-util-from-markdown": "^2.0.3",
+    "mdast-util-gfm": "^3.1.0",
     "micromark-extension-gfm": "^3.0.0",
     "mdast-util-frontmatter": "^2.0.1",
     "micromark-extension-frontmatter": "^2.0.0",
-    "yaml": "^2.5.1"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",

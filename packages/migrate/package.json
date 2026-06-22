@@ -27,7 +27,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "yaml": "^2.5.0"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
