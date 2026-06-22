@@ -23,7 +23,18 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        # Dependabot bumps package.json without updating bun.lock; its PRs get
+        # the lockfile regenerated and committed by dependabot-lockfile.yml.
+        # Allow the lockfile to drift for those runs; enforce it for everyone
+        # else so a stale lockfile never reaches main unnoticed.
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ "$ACTOR" = "dependabot[bot]" ]; then
+            bun install
+          else
+            bun install --frozen-lockfile
+          fi
 
       - name: Content lint (markdownlint-cli2)
         run: bun run lint:md
@@ -61,7 +72,16 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        # See the markdown job above: tolerate Dependabot's stale lockfile,
+        # enforce a frozen lockfile for all other actors.
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ "$ACTOR" = "dependabot[bot]" ]; then
+            bun install
+          else
+            bun install --frozen-lockfile
+          fi
 
       - name: Run linter unit tests
         run: bun test

@@ -1,0 +1,63 @@
+name: Sync bun lockfile
+
+# Why this exists:
+# Dependabot's `npm` ecosystem bumps versions in package.json but does NOT
+# update bun.lock, and its `bun` ecosystem can't update the lockfile reliably in
+# a workspace (dependabot-core#14223). That leaves bun.lock stale on every
+# Dependabot PR, so `bun install --frozen-lockfile` fails in CI.
+#
+# This workflow regenerates bun.lock on Dependabot PRs and pushes it back to the
+# PR branch, keeping the lockfile in sync so the post-merge frozen check passes.
+# Note: the commit is pushed with GITHUB_TOKEN, which by design does not
+# re-trigger CI — ci.yml already tolerates Dependabot's stale lockfile, so the
+# PR stays green without a re-run.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "**/package.json"
+
+# Allow the job to push the regenerated lockfile back to the PR branch.
+# Dependabot-triggered runs are read-only by default; this elevates them.
+permissions:
+  contents: write
+
+# Cancel a stale sync if Dependabot force-pushes a new revision to the PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-lockfile:
+    name: Regenerate bun.lock on Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # --lockfile-only updates bun.lock to match the bumped manifests without
+      # installing node_modules or rewriting package.json.
+      - name: Regenerate lockfile
+        run: bun install --lockfile-only
+
+      - name: Commit and push if bun.lock changed
+        run: |
+          if git diff --quiet -- bun.lock; then
+            echo "bun.lock already in sync — nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bun.lock
+          git commit -m "chore(deps): sync bun.lock with Dependabot bump"
+          git push

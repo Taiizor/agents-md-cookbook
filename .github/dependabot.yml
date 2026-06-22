@@ -5,7 +5,9 @@ version: 2
 updates:
   # JavaScript / TypeScript dependencies across the Bun workspace.
   # The npm ecosystem reads the root bun.lock, so a single "/" entry covers
-  # the root manifest plus every package under packages/*.
+  # the root manifest plus every package under packages/*. It bumps the
+  # manifests but does NOT update bun.lock, so .github/workflows/
+  # dependabot-lockfile.yml regenerates and commits the lockfile on each PR.
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
